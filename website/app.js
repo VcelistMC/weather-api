@@ -15,17 +15,38 @@ function clickAction(event){
     let feelingsBox = document.getElementById('feelings');
     var userZIP = textBox.value;
     var userFeelings = feelingsBox.value;
+
 }
 
 let getData = async(url = '', key = '', code = '') => {
-    const req = await fetch(url + code + key);
+    const res = await fetch(url + code + key);
     try {
         const res = await req.json();
-        console.log(res); 
+        return res;
     } catch (error) {
         console.log(`error: ${error}`);
     }
 }
 
-
+let postData = async(url = '', data = {}) => {
+    const req = await fetch(url, {
+        method: 'POST', 
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+    try {
+        const res = await req.json();
+        return res;
+    } catch(e) {
+        console.log(`error: ${e}`);
+    }
+}
 //getData(BASE_URL + DEF_CODE + KEY);
+postData('/add', {
+    temperature: '231', 
+    date: d,
+    feelings: "happy :D"    
+});
