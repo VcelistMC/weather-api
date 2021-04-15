@@ -16,13 +16,20 @@ function clickAction(event){
     var userZIP = textBox.value;
     var userFeelings = feelingsBox.value;
 
+    const data = getData(BASE_URL, KEY, userZIP).then((result) =>
+        postData('/add', {
+            temperature: result.main.temp, 
+            date: d,
+            feelings: userFeelings    
+        }).then(updateUI('/all'))
+    );
 }
 
-let getData = async(url = '', key = '', code = '') => {
-    const res = await fetch(url + code + key);
+let getData = async(url = '', key = '', code = '', units = '&units=metric') => {
+    const res = await fetch(url + code + key + units);
     try {
-        const res = await req.json();
-        return res;
+        const data = await res.json();
+        return data;
     } catch (error) {
         console.log(`error: ${error}`);
     }
@@ -44,9 +51,20 @@ let postData = async(url = '', data = {}) => {
         console.log(`error: ${e}`);
     }
 }
-//getData(BASE_URL + DEF_CODE + KEY);
-postData('/add', {
-    temperature: '231', 
-    date: d,
-    feelings: "happy :D"    
-});
+
+const updateUI = async (url ='') => {
+    let dateHolder = document.getElementById('date');
+    let tempHolder = document.getElementById('temp');
+    let feelingsHolder = document.getElementById('content');
+
+    const res = await fetch(url);
+    try {
+        const data = await res.json();
+        
+        dateHolder.innerText = data.date;
+        tempHolder.innerText = data.temp;
+        feelingsHolder.innerText = data.user_res;
+    } catch(e) {
+        console.log(`error: ${e}`);
+    }
+}
