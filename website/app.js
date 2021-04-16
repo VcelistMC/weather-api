@@ -10,7 +10,7 @@ let genButton = document.getElementById('generate');
 genButton.addEventListener('click', clickAction);
 
 function clickAction(event){
-    console.log("boop!");
+    console.log("boop!! :D");
     let textBox = document.getElementById('zip');
     let feelingsBox = document.getElementById('feelings');
     var userZIP = textBox.value;
@@ -21,11 +21,11 @@ function clickAction(event){
             temperature: result.main.temp, 
             date: d,
             feelings: userFeelings    
-        }).then(updateUI('/all'))
+        }).then(getAndUpdateUI('/all'))
     );
 }
 
-let getData = async(url = '', key = '', code = '', units = '&units=metric') => {
+const getData = async(url = '', key = '', code = '', units = '&units=metric') => {
     const res = await fetch(url + code + key + units);
     try {
         const data = await res.json();
@@ -35,7 +35,7 @@ let getData = async(url = '', key = '', code = '', units = '&units=metric') => {
     }
 }
 
-let postData = async(url = '', data = {}) => {
+const postData = async(url = '', data = {}) => {
     const req = await fetch(url, {
         method: 'POST', 
         credentials: 'same-origin',
@@ -52,7 +52,7 @@ let postData = async(url = '', data = {}) => {
     }
 }
 
-const updateUI = async (url ='') => {
+const getAndUpdateUI = async (url ='') => {
     let dateHolder = document.getElementById('date');
     let tempHolder = document.getElementById('temp');
     let feelingsHolder = document.getElementById('content');
@@ -61,9 +61,9 @@ const updateUI = async (url ='') => {
     try {
         const data = await res.json();
         
-        dateHolder.innerText = data.date;
-        tempHolder.innerText = data.temp;
-        feelingsHolder.innerText = data.user_res;
+        dateHolder.innerHTML = `Date: ${data.date}`;
+        tempHolder.innerHTML = `Temperature: ${data.temp}`;
+        feelingsHolder.innerHTML = `I feel: ${data.user_res}`;
     } catch(e) {
         console.log(`error: ${e}`);
     }
